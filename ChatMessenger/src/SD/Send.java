@@ -4,7 +4,7 @@ package SD;
  *
  * @author jjaneto
  */
-public class Send {
+public class Send extends Thread{
 
     public Send() {
     }

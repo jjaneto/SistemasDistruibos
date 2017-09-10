@@ -4,9 +4,10 @@ package SD;
  *
  * @author jjaneto
  */
-public class Receive {
+public class Receive extends Thread{
 
     public Receive() {
+        
     }
     
     

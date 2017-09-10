@@ -10,33 +10,91 @@ public class MainClass {
     
     private String nameUser;
     private String whoReceives;
-    private boolean grupo;
+    private boolean ehGrupo;
+    private Send ssend;
+    private Receive rreceive;
+    private Scanner sc;
+    private Group grupo;
 
-    public MainClass(String nameUser) {
-        this.nameUser = nameUser;
-        grupo = false;
+    public MainClass() {
+//        this.nameUser = nameUser;
+        whoReceives = new String();
+        nameUser = new String();
+        ehGrupo = false;
     }
     
     public boolean ehGrupo(){
-        return grupo;
+        return ehGrupo;
+    }
+    
+    public void setUser(String nameUser){
+        this.nameUser = nameUser;
     }
     
     public String receptor(){
         return whoReceives;
     }
     
+    public void setReceptor(String whoReceives){
+        this.whoReceives = whoReceives;
+    }
+    
+    public boolean ehComando(String w){
+        switch(w.charAt(0)){
+            case '@':
+                setReceptor(w.substring(1, w.length()));
+                ehGrupo = false;
+                return true;
+            case '#':
+                setReceptor(w.substring(1, w.length()));
+                return ehGrupo = true;
+            case '!':
+                String subs = w.substring(1, w.length());
+                String[] tokens = subs.split(" ");
+                if(subs.equals("addUser")){
+                    grupo.addUserToGroup(tokens[1], tokens[2]);
+                }else if(subs.equals("delUser")){
+                    grupo.deleteUser(tokens[1], tokens[2]);
+                }else if(subs.equals("addGroup")){
+                    grupo.createGroup(tokens[1]);
+                }else if(subs.equals("delGroup")){
+                    grupo.deleteGroup(tokens[1]);
+                }
+                return true;                
+            default:
+                return false;
+        }
+    }
+    
+    public void enviaMenssagem(String w){
+        
+    }
+    
     public void runChat(){
-        Scanner sc = new Scanner(System.in);
+        sc = new Scanner(System.in);
         System.out.print("User: ");
         String w = sc.nextLine();
-        MainClass m = new MainClass(w);    
+        setUser(w);
+//        MainClass m = new MainClass(w);    
         while(true){
-            if(ehGrupo()){
-                System.out.print("");
+            if(receptor().isEmpty()){
+                System.out.print(">> ");
             }else{
-                
+                if(ehGrupo()){
+                    System.out.print(receptor() + "* >> ");
+                }else{
+                    System.out.print(receptor() + " >> ");
+                }
+            }
+            w = sc.nextLine();
+            if(!ehComando(w)){
+                enviaMenssagem(w);
             }
         }
+    }
+    
+    public static void main(String args[]){
+        new MainClass().runChat();
     }
     
     
