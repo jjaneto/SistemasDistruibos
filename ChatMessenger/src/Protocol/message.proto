@@ -1,5 +1,3 @@
-syntax = "proto3";
-
 option java_package = "ChatMessenger";
 option java_outer_classname = "MessageProto";
 
