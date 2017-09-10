@@ -9,6 +9,11 @@ public class Group {
     public Group() {
     }
     
+    public boolean sendMessageToGroup(String group, String message){
+        
+        return true;
+    }
+    
     public boolean addUserToGroup(String group, String user){
         
         return true;

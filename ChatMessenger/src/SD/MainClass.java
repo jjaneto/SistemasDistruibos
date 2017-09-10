@@ -31,7 +31,7 @@ public class MainClass {
         this.nameUser = nameUser;
     }
     
-    public String receptor(){
+    public String getReceptor(){
         return whoReceives;
     }
     
@@ -67,7 +67,13 @@ public class MainClass {
     }
     
     public void enviaMenssagem(String w){
-        
+        if(getReceptor().isEmpty()){
+            System.err.println("Você não pode mandar mensagem sem que um usuário ou um grupo a receba!");
+        }else{
+            if(!ehGrupo){
+                new Send().start();
+            }else grupo.sendMessageToGroup(getReceptor(), w);
+        }        
     }
     
     public void runChat(){
@@ -77,13 +83,13 @@ public class MainClass {
         setUser(w);
 //        MainClass m = new MainClass(w);    
         while(true){
-            if(receptor().isEmpty()){
+            if(getReceptor().isEmpty()){
                 System.out.print(">> ");
             }else{
                 if(ehGrupo()){
-                    System.out.print(receptor() + "* >> ");
+                    System.out.print(getReceptor() + "* >> ");
                 }else{
-                    System.out.print(receptor() + " >> ");
+                    System.out.print(getReceptor() + " >> ");
                 }
             }
             w = sc.nextLine();
