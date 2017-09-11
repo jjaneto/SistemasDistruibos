@@ -60,7 +60,7 @@ public class Group {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
 
-            channel.basicPublish(group, "", null, null);
+            channel.basicPublish(group,"", null, mensagem.toByteArray());
             channel.close();
             connection.close();
         } catch (Exception e) {
