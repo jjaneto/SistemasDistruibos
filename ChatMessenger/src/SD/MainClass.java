@@ -27,6 +27,10 @@ public class MainClass {
         return ehGrupo;
     }
     
+    public String getUser(){
+        return nameUser;
+    }
+    
     public void setUser(String nameUser){
         this.nameUser = nameUser;
     }
@@ -71,8 +75,8 @@ public class MainClass {
             System.err.println("Você não pode mandar mensagem sem que um usuário ou um grupo a receba!");
         }else{
             if(!ehGrupo){
-                new Send().start();
-            }else grupo.sendMessageToGroup(getReceptor(), w);
+                new Send(getUser(), getReceptor(), w, "").start();
+            }else grupo.sendMessageToGroup(getUser(), getReceptor(), w);
         }        
     }
     
