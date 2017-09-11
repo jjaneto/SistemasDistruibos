@@ -1,8 +1,10 @@
 package SD;
 
+import com.google.protobuf.ByteString;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import static java.lang.Thread.MAX_PRIORITY;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +15,10 @@ import java.time.format.DateTimeFormatter;
 public class Group {
 
     private LocalDateTime ldt;
-
+    
+    private Protocol.MessageProto.Mensagem mensagem;
+    private Protocol.MessageProto.Mensagem.Conteudo conteudoMensagem;
+    
     public Group() {
     }
 
@@ -24,6 +29,21 @@ public class Group {
 
     public String horaEnvio() {
         return ldt.getHour() + ":" + ldt.getMinute();
+    }
+    
+    public void makeMessageProtocol(String grupo, String emissor, String smensagem){
+        conteudoMensagem = Protocol.MessageProto.Mensagem.Conteudo.newBuilder()
+                .setBody(ByteString.copyFrom(smensagem.getBytes()))
+                .setName("none")
+                .setType("none")
+                .build();
+        mensagem = Protocol.MessageProto.Mensagem.newBuilder()
+                .setDate(dataEnvio())
+                .setGroup(grupo)
+                .setSender(emissor)
+                .setTime(horaEnvio())
+                .setContent(MAX_PRIORITY, conteudoMensagem)
+                .build();
     }
 
     public ConnectionFactory makeFactory() {

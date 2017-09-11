@@ -47,21 +47,23 @@ public class MainClass {
         switch(w.charAt(0)){
             case '@':
                 setReceptor(w.substring(1, w.length()));
-                ehGrupo = false;
-                return true;
+                return !(ehGrupo = false);
             case '#':
                 setReceptor(w.substring(1, w.length()));
                 return ehGrupo = true;
             case '!':
                 String subs = w.substring(1, w.length());
                 String[] tokens = subs.split(" ");
-                if(subs.equals("addUser")){
+//                System.out.println("subs eh " + subs);
+//                System.out.println("tokens eh " + tokens[1] + " e " + tokens[2]);
+                if(tokens[0].equals("addUser")){
+//                    System.out.println("add " + tokens[1] + " to " + tokens[2]);
                     grupo.addUserToGroup(tokens[1], tokens[2]);
-                }else if(subs.equals("delUser")){
+                }else if(tokens[0].equals("delUser")){
                     grupo.deleteUser(tokens[1], tokens[2]);
-                }else if(subs.equals("addGroup")){
+                }else if(tokens[0].equals("addGroup")){
                     grupo.createGroup(tokens[1]);
-                }else if(subs.equals("delGroup")){
+                }else if(tokens[0].equals("delGroup")){
                     grupo.deleteGroup(tokens[1]);
                 }
                 return true;                
@@ -98,7 +100,7 @@ public class MainClass {
             }
             w = sc.nextLine();
             if(!ehComando(w)){
-                enviaMenssagem(w);
+                //enviaMenssagem(w);
             }
         }
     }

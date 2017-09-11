@@ -1,5 +1,6 @@
 package SD;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -15,6 +16,8 @@ import java.io.ObjectInputStream;
 public class Receive extends Thread {
 
     private String receptor;
+    private MainClass mcs;
+    private Protocol.MessageProto.Mensagem mensagem;
 
     public Receive(String receptor) {
         this.receptor = receptor;
@@ -25,6 +28,13 @@ public class Receive extends Thread {
 //        ObjectInputStream is = new ObjectInputStream(in);
 //        return is.readObject();
 //    }
+    public void transformMessage(byte[] arrBytes) {
+        try {
+            mensagem.parseFrom(arrBytes);
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void run() {
@@ -39,6 +49,26 @@ public class Receive extends Thread {
             channel.queueDeclare(receptor, false, false, false, null);
             //  System.out.println(" [*] Esperando por mensagem. Para sair aperte CTRL+C");
 
+            QueueingConsumer consumer = new QueueingConsumer(channel);
+            channel.basicConsume(receptor, true, consumer);
+
+            while (true) {
+                QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                transformMessage(delivery.getBody());
+
+                System.out.println("(" + mensagem.getDate() + " às " + mensagem.getTime() + ") "
+                        + mensagem.getSender() + " diz: "
+                        + new String(mensagem.getContent(0).getBody().toByteArray()));
+                if (mcs.getReceptor().isEmpty()) {
+                    System.out.print(">> ");
+                } else {
+                    if (mcs.ehGrupo()) {
+                        System.out.print(mcs.getReceptor() + "* >> ");
+                    } else {
+                        System.out.print(mcs.getReceptor() + " >> ");
+                    }
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
