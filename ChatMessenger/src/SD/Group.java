@@ -57,7 +57,6 @@ public class Group {
     }
 
     public boolean sendMessageToGroup(String user, String group, String message) {
-        System.out.println(user + " vai mandar a mensagem " + message + " para o grupo " + group);
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
@@ -73,20 +72,20 @@ public class Group {
     }
 
     public boolean addUserToGroup(String user, String group) {
-        System.out.println("Vou adicionar " + user + " no grupo " + group);
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
 
-            //channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
             channel.queueBind(user, group, "");
+            channel.close();
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
     }
 
-    public boolean deleteUser(String group, String user) {
+    public boolean deleteUser(String user, String group) {
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
@@ -100,12 +99,13 @@ public class Group {
         return true;
     }
 
-    public boolean createGroup(String group) {
+    public boolean createGroup(String user, String group) {
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
 
             channel.exchangeDeclare(group, "fanout");
+            channel.queueBind(user, group, "");
             channel.close();
             connection.close();
         } catch (Exception e) {

@@ -24,11 +24,6 @@ public class Receive extends Thread {
         this.mcs = mcs;
     }
 
-//    public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
-//        ByteArrayInputStream in = new ByteArrayInputStream(data);
-//        ObjectInputStream is = new ObjectInputStream(in);
-//        return is.readObject();
-//    }
     public void transformMessage(byte[] arrBytes) {
         try {
             mensagem = Protocol.MessageProto.Mensagem.newBuilder().mergeFrom(arrBytes).build();
@@ -49,16 +44,15 @@ public class Receive extends Thread {
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             channel.queueDeclare(receptor, false, false, false, null);
-            //  System.out.println(" [*] Esperando por mensagem. Para sair aperte CTRL+C");
 
             QueueingConsumer consumer = new QueueingConsumer(channel);
             channel.basicConsume(receptor, true, consumer);
-//            System.out.println("Iniciei processo de receber mensagens do usuario " + receptor);
             while (true) {
                 QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                 transformMessage(delivery.getBody());
-//                System.out.println("Recebi mensagem");
 
+                if(!mensagem.getGroup().equals("none") && mensagem.getSender().equals(mcs.getUser()))
+                    continue;
 
                 if(mensagem.getGroup().equals("none")){
                     System.out.println("(" + mensagem.getDate() + " às " + mensagem.getTime() + ") "

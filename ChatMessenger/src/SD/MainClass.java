@@ -55,11 +55,6 @@ public class MainClass {
             case '!':
                 String subs = w.substring(1, w.length());
                 String[] tokens = subs.split(" ");
-//                System.out.println("tokens eh:");
-//                for(String x : tokens){
-//                    System.out.print(x + " ");
-//                }
-//                System.out.println("");
                 if(tokens[0].equals("addUser")){
                     grupo.addUserToGroup(tokens[1], tokens[2]);
                 }else if(tokens[0].equals("delUser")){
@@ -81,8 +76,9 @@ public class MainClass {
         }else{
             if(!ehGrupo){
                 new Send(getUser(), getReceptor(), w).start();
-//                new Send(getUser(), getReceptor(), w, "").start();
-            }else grupo.sendMessageToGroup(getUser(), getReceptor(), w);
+            }else{
+                grupo.sendMessageToGroup(getUser(), getReceptor(), w);
+            }
         }        
     }
     
@@ -92,8 +88,7 @@ public class MainClass {
         String w = sc.nextLine();
         setUser(w);
         rreceive = new Receive(getUser(), this);
-        rreceive.start();
-//        MainClass m = new MainClass(w);    
+        rreceive.start();    
         while(true){
             if(getReceptor().isEmpty()){
                 System.out.print(">> ");

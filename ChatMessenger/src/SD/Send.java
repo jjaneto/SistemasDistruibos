@@ -87,7 +87,6 @@ public class Send extends Thread {
             Channel channel = connection.createChannel();
             channel.queueDeclare(receptor, false, false, false, null);
             makeMessageProtocol();
-            System.out.println("Vou enviar mensagem para " + receptor);
             channel.basicPublish("", receptor, null, mensagem.toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
