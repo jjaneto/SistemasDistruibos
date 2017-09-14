@@ -21,6 +21,7 @@ public class MainClass {
         whoReceives = new String();
         nameUser = new String();
         ehGrupo = false;
+        grupo = new Group();
     }
     
     public boolean ehGrupo(){
@@ -54,15 +55,17 @@ public class MainClass {
             case '!':
                 String subs = w.substring(1, w.length());
                 String[] tokens = subs.split(" ");
-//                System.out.println("subs eh " + subs);
-//                System.out.println("tokens eh " + tokens[1] + " e " + tokens[2]);
+//                System.out.println("tokens eh:");
+//                for(String x : tokens){
+//                    System.out.print(x + " ");
+//                }
+//                System.out.println("");
                 if(tokens[0].equals("addUser")){
-//                    System.out.println("add " + tokens[1] + " to " + tokens[2]);
                     grupo.addUserToGroup(tokens[1], tokens[2]);
                 }else if(tokens[0].equals("delUser")){
                     grupo.deleteUser(tokens[1], tokens[2]);
                 }else if(tokens[0].equals("addGroup")){
-                    grupo.createGroup(tokens[1]);
+                    grupo.createGroup(getUser(), tokens[1]);
                 }else if(tokens[0].equals("delGroup")){
                     grupo.deleteGroup(tokens[1]);
                 }
@@ -77,7 +80,8 @@ public class MainClass {
             System.err.println("Você não pode mandar mensagem sem que um usuário ou um grupo a receba!");
         }else{
             if(!ehGrupo){
-                new Send(getUser(), getReceptor(), w, "").start();
+                new Send(getUser(), getReceptor(), w).start();
+//                new Send(getUser(), getReceptor(), w, "").start();
             }else grupo.sendMessageToGroup(getUser(), getReceptor(), w);
         }        
     }
@@ -87,6 +91,8 @@ public class MainClass {
         System.out.print("User: ");
         String w = sc.nextLine();
         setUser(w);
+        rreceive = new Receive(getUser(), this);
+        rreceive.start();
 //        MainClass m = new MainClass(w);    
         while(true){
             if(getReceptor().isEmpty()){
@@ -100,7 +106,7 @@ public class MainClass {
             }
             w = sc.nextLine();
             if(!ehComando(w)){
-                //enviaMenssagem(w);
+                enviaMenssagem(w);
             }
         }
     }

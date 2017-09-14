@@ -1,20 +1,13 @@
 package SD;
 
-import Protocol.MessageProto;
-import com.rabbitmq.client.ConnectionFactory;
-import Protocol.MessageProto.Mensagem.Builder;
+ 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.CodedOutputStream;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.time.LocalDate;
+import com.rabbitmq.client.ConnectionFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+ 
 /**
  *
  * @author jjaneto
@@ -24,17 +17,16 @@ public class Send extends Thread {
     private String receptor;
     private String emissor;
     private String smensagem;
-    private String nomeGrupo;
+//    private String nomeGrupo;
     private LocalDateTime ldt;
     
     private Protocol.MessageProto.Mensagem mensagem;
     private Protocol.MessageProto.Mensagem.Conteudo conteudoMensagem;
 
-    public Send(String emissor, String receptor, String smensagem, String nomeGrupo) {
+    public Send(String emissor, String receptor, String smensagem) {
         this.receptor = receptor;
         this.emissor = emissor;
         this.smensagem = smensagem;
-        this.nomeGrupo = nomeGrupo;
         ldt = LocalDateTime.now();
     }
 
@@ -50,9 +42,9 @@ public class Send extends Thread {
         return smensagem;
     }
 
-    public String getNomeGrupo() {
-        return nomeGrupo;
-    }
+//    public String getNomeGrupo() {
+//        return nomeGrupo;
+//    }
 
     public String getMensagem() {
         return smensagem;
@@ -67,13 +59,6 @@ public class Send extends Thread {
         return ldt.getHour() + ":" + ldt.getMinute();
     }
 
-//    public static byte[] serialize(Object obj) throws IOException {
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        ObjectOutputStream os = new ObjectOutputStream(out);
-//        os.writeObject(obj);
-//        return out.toByteArray();
-//    }
-
     public void makeMessageProtocol(){
         conteudoMensagem = Protocol.MessageProto.Mensagem.Conteudo.newBuilder()
                 .setBody(ByteString.copyFrom(smensagem.getBytes()))
@@ -82,10 +67,10 @@ public class Send extends Thread {
                 .build();
         mensagem = Protocol.MessageProto.Mensagem.newBuilder()
                 .setDate(dataEnvio())
-                .setGroup(getNomeGrupo())
+                .setGroup("none")
                 .setSender(getEmissor())
                 .setTime(horaEnvio())
-                .setContent(MAX_PRIORITY, conteudoMensagem)
+                .addContent(conteudoMensagem)   
                 .build();
     }
     
@@ -102,7 +87,7 @@ public class Send extends Thread {
             Channel channel = connection.createChannel();
             channel.queueDeclare(receptor, false, false, false, null);
             makeMessageProtocol();
-            
+            System.out.println("Vou enviar mensagem para " + receptor);
             channel.basicPublish("", receptor, null, mensagem.toByteArray());
         } catch (Exception e) {
             e.printStackTrace();

@@ -19,8 +19,9 @@ public class Receive extends Thread {
     private MainClass mcs;
     private Protocol.MessageProto.Mensagem mensagem;
 
-    public Receive(String receptor) {
+    public Receive(String receptor, MainClass mcs) {
         this.receptor = receptor;
+        this.mcs = mcs;
     }
 
 //    public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
@@ -30,7 +31,8 @@ public class Receive extends Thread {
 //    }
     public void transformMessage(byte[] arrBytes) {
         try {
-            mensagem.parseFrom(arrBytes);
+            mensagem = Protocol.MessageProto.Mensagem.newBuilder().mergeFrom(arrBytes).build();
+            //mensagem.parseFrom(arrBytes);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
@@ -51,14 +53,22 @@ public class Receive extends Thread {
 
             QueueingConsumer consumer = new QueueingConsumer(channel);
             channel.basicConsume(receptor, true, consumer);
-
+//            System.out.println("Iniciei processo de receber mensagens do usuario " + receptor);
             while (true) {
                 QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                 transformMessage(delivery.getBody());
+//                System.out.println("Recebi mensagem");
 
-                System.out.println("(" + mensagem.getDate() + " às " + mensagem.getTime() + ") "
-                        + mensagem.getSender() + " diz: "
-                        + new String(mensagem.getContent(0).getBody().toByteArray()));
+
+                if(mensagem.getGroup().equals("none")){
+                    System.out.println("(" + mensagem.getDate() + " às " + mensagem.getTime() + ") "
+                            + mensagem.getSender() + " diz: "
+                            + new String(mensagem.getContent(0).getBody().toByteArray()));
+                }else{
+                    System.out.println("(" + mensagem.getDate() + " às " + mensagem.getTime() + ") "
+                            + mensagem.getSender() + "/" + mensagem.getGroup() + " diz: "
+                            + new String(mensagem.getContent(0).getBody().toByteArray()));
+                }
                 if (mcs.getReceptor().isEmpty()) {
                     System.out.print(">> ");
                 } else {

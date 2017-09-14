@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import static java.lang.Thread.MAX_PRIORITY;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -42,7 +43,7 @@ public class Group {
                 .setGroup(grupo)
                 .setSender(emissor)
                 .setTime(horaEnvio())
-                .setContent(MAX_PRIORITY, conteudoMensagem)
+                .addContent(conteudoMensagem)
                 .build();
     }
 
@@ -56,10 +57,12 @@ public class Group {
     }
 
     public boolean sendMessageToGroup(String user, String group, String message) {
+        System.out.println(user + " vai mandar a mensagem " + message + " para o grupo " + group);
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
-
+            ldt = LocalDateTime.now();
+            makeMessageProtocol(group, user, message);
             channel.basicPublish(group,"", null, mensagem.toByteArray());
             channel.close();
             connection.close();
@@ -69,7 +72,8 @@ public class Group {
         return true;
     }
 
-    public boolean addUserToGroup(String group, String user) {
+    public boolean addUserToGroup(String user, String group) {
+        System.out.println("Vou adicionar " + user + " no grupo " + group);
         try {
             Connection connection = makeFactory().newConnection();
             Channel channel = connection.createChannel();
