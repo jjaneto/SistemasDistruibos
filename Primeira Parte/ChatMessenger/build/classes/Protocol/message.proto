@@ -1,0 +1,15 @@
+option java_package = "ChatMessenger";
+option java_outer_classname = "MessageProto";
+
+message Mensagem{
+     required string sender = 1; // Nome do emissor
+     required string date = 2; // Data de envio
+     required string time = 3; // Hora de envio
+     optional string group = 4; // Informa o nome do grupo, se a mensagem for para um grupo
+     message Conteudo{
+           required string type = 1; // Tipo do conteúdo da mensagem de acordo com o padrão de tipos MIME composto por "tipo/subtipo", exemplos: "text/plain", "text/html", "image/png" (ver: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Basico_sobre_HTTP/MIME_types)
+           required bytes body = 2; // Sequência de bytes que compõe o corpo da mensagem
+           optional string name = 3; // Nome do conteúdo, se existente. Exemplos: "logo_ufs.png", "index.html"
+     }
+     repeated Conteudo content = 5;
+}
