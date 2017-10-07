@@ -37,10 +37,13 @@ public class Receive extends Thread {
     public void run() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("sidewinder.rmq.cloudamqp.com");
-            factory.setUsername("qgsqvfci");
-            factory.setVirtualHost("qgsqvfci");
-            factory.setPassword("ZomFOJkXWL-V6yeaPUEgmOCymstYwds2");
+            factory.setHost("ec2-54-218-117-155.us-west-2.compute.amazonaws.com");
+            factory.setUsername("usuario");
+            factory.setPassword("senha");
+//            factory.setHost("sidewinder.rmq.cloudamqp.com");
+//            factory.setUsername("qgsqvfci");
+//            factory.setVirtualHost("qgsqvfci");
+//            factory.setPassword("ZomFOJkXWL-V6yeaPUEgmOCymstYwds2");
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             channel.queueDeclare(receptor, false, false, false, null);
@@ -49,6 +52,8 @@ public class Receive extends Thread {
             channel.basicConsume(receptor, true, consumer);
             while (true) {
                 QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                String w = new String(delivery.getBody());
+//                System.out.println("Chegou: " + w);
                 transformMessage(delivery.getBody());
 
                 if(!mensagem.getGroup().equals("none") && mensagem.getSender().equals(mcs.getUser()))

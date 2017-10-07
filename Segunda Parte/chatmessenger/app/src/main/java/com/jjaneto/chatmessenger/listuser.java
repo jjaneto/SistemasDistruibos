@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,12 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class listuser extends AppCompatActivity implements View.OnClickListener{
+public class listuser extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -30,7 +30,9 @@ public class listuser extends AppCompatActivity implements View.OnClickListener{
 
     private FloatingActionButton botaoemail;
     private ListView lv;
-    private List<String> lista;
+    private ArrayList<identificadorTipo> lista;
+    public String usuario;
+
 
     private void associa(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -40,25 +42,14 @@ public class listuser extends AppCompatActivity implements View.OnClickListener{
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        lista = new ArrayList<String>(Arrays.asList(new String("lixo")));
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
+        lista = new ArrayList<identificadorTipo>(Arrays.asList(new identificadorTipo(true, "")));
+        ArrayAdapter<identificadorTipo> adapter =  new ArrayAdapter<identificadorTipo>(
                 getApplicationContext(),
                 android.R.layout.simple_list_item_1,
                 lista);
 //
         lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent inta = new Intent(listuser.this, chat.class);
-                inta.putExtra("receptor", lista.get(i));
-
-                startActivity(inta);
-//                startActivity(new Intent(listuser.this, chat.class));
-//                finish();
-            }
-        });
+        lv.setOnItemClickListener(this);
     }
 
     @Override
@@ -66,16 +57,13 @@ public class listuser extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listuser);
 
-//        Snackbar.make(, "Bem vindo " + telaLogin.usuario, Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
+        associa();
 
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Seila mano", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        Bundle extra = getIntent().getExtras();
+
+        if (extra != null) {
+            usuario = extra.get("usuario").toString();
+        }
     }
 
     @Override
@@ -164,6 +152,32 @@ public class listuser extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void criaUser(boolean ehGrupo, String who){
-        lista.add(who);
+        lista.add(new identificadorTipo(ehGrupo, who));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//        System.err.println("oie");
+        if(adapterView == lv){
+//            System.err.println("nois novamente");
+            if(lista.get(i).getEhGrupo()){
+                Toast.makeText(listuser.this, "Apertei no " + i + " size " + lista.size(), Toast.LENGTH_SHORT).show();
+                Intent inta = new Intent(listuser.this, chat_grupo.class);
+                System.err.println("(listuser) chamei chat_grupo com " + lista.get(i).nome() + " e " + usuario);
+                inta.putExtra("grupo", lista.get(i).nome());
+                inta.putExtra("usuario", usuario);
+
+//
+                startActivity(inta);
+//                startActivity(new Intent(listuser.this, chat_grupo.class));
+//                finish();
+            }else{
+                Intent inta = new Intent(listuser.this, chat_usuario2.class);
+                inta.putExtra("receptor", lista.get(i).nome());
+                inta.putExtra("usuario", usuario);
+
+                startActivity(inta);
+            }
+        }
     }
 }

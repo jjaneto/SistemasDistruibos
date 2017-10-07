@@ -40,5 +40,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/protobuf-java-3.4.0.jar')
     compile files('libs/rabbitmq-client.jar')
-    compile files('libs/rabbitmq-client-tests.jar')
 }

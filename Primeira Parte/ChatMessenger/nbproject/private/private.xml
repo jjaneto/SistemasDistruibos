@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/ChatMessenger/src/SD/MainClass.java</file>
-            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/ChatMessenger/src/Protocol/message.proto</file>
-            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/ChatMessenger/src/Protocol/MessageProto.java</file>
+            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/Primeira%20Parte/ChatMessenger/src/SD/MainClass.java</file>
+            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/Primeira%20Parte/ChatMessenger/src/SD/Receive.java</file>
+            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/Primeira%20Parte/ChatMessenger/src/SD/Group.java</file>
+            <file>file:/Users/jjaneto/Desktop/Git/SistemasDistruibos/Primeira%20Parte/ChatMessenger/src/SD/Send.java</file>
         </group>
     </open-files>
 </project-private>

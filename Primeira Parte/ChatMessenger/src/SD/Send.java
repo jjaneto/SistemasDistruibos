@@ -78,10 +78,13 @@ public class Send extends Thread {
     public void run() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("sidewinder.rmq.cloudamqp.com");
-            factory.setUsername("qgsqvfci");
-            factory.setVirtualHost("qgsqvfci");
-            factory.setPassword("ZomFOJkXWL-V6yeaPUEgmOCymstYwds2");
+            factory.setHost("ec2-54-218-117-155.us-west-2.compute.amazonaws.com");
+            factory.setUsername("usuario");
+            factory.setPassword("senha");
+//            factory.setHost("sidewinder.rmq.cloudamqp.com");
+//            factory.setUsername("qgsqvfci");
+//            factory.setVirtualHost("qgsqvfci");
+//            factory.setPassword("ZomFOJkXWL-V6yeaPUEgmOCymstYwds2");
 
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();

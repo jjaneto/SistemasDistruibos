@@ -14,7 +14,7 @@ public class telaLogin extends AppCompatActivity implements View.OnClickListener
 
     private Button entrar;
     private EditText edt;
-    public static String usuario;
+    public String usuario;
 
     @Override
     protected void onStart() {
@@ -25,16 +25,17 @@ public class telaLogin extends AppCompatActivity implements View.OnClickListener
         entrar.setOnClickListener(this);
 
         edt = (EditText) findViewById(R.id.editLogin);
-        usuario = edt.getText().toString();
-
     }
 
 
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.botao_login_confirmar){
-            startActivity(new Intent(telaLogin.this, listuser.class));
-            finish();
+            usuario = edt.getText().toString();
+            Intent inta = new Intent(telaLogin.this, listuser.class);
+            inta.putExtra("usuario", usuario);
+            startActivity(inta);
+//            finish();
         }
     }
 }
